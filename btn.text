@@ -1,0 +1,54 @@
+import React, { ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
+
+export type ButtonSize = "sm" | "md";
+
+export type ButtonType = "button" | "reset" | "submit";
+
+interface ButtonProps {
+  children?: ReactNode;
+  className?: string;
+  disabled?: boolean;
+  size?: ButtonSize;
+  type?: ButtonType;
+  onClick?: () => void;
+}
+
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    { children, className, onClick, size = "md", type = "button", disabled },
+    ref
+  ) => {
+    const defaultClasses =
+      "rounded-md bg-blue-button hover:bg-indigo disabled:bg-[#696969]";
+    const sizeClasses = {
+      sm: "font-medium text-[11px] text-fs1 tracking-[0.09px] py-[11px] px-[19px]",
+      md: "text-[15px] font-bold tracking-[0.12px] py-[11px] px-[28px]",
+    };
+    const newClasses = twMerge(
+      "button",
+      defaultClasses,
+      sizeClasses[size],
+      className
+    );
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      onClick?.();
+    };
+
+    return (
+      <button
+        ref={ref}
+        className={newClasses}
+        disabled={disabled}
+        type={type}
+        onClick={handleClick}
+      >
+        {children}
+      </button>
+    );
+  }
+);
+
+Button.displayName = "Button";
