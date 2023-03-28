@@ -1,0 +1,131 @@
+import { Children, ReactNode, useCallback, useMemo, useState } from "react";
+import { twMerge } from "tailwind-merge";
+
+import { Button } from "../Button";
+import { Icon } from "../Icon";
+
+export type StepItem = {
+  name: string;
+  canGoNext?: boolean;
+};
+
+export type StepItems = StepItem[];
+
+type StepItemStatus = "complete" | "current" | "upcoming";
+
+interface StepperProps {
+  children: ReactNode;
+  stepItems: StepItems;
+  onSubmit?: () => void;
+}
+
+export function Stepper({ children, stepItems, onSubmit }: StepperProps) {
+  const [currentStep, setCurrentStep] = useState<number>(0);
+  const arrayChildren = Children.toArray(children);
+  const bgColors: Record<StepItemStatus, string> = {
+    complete: "bg-[#9AC67C]",
+    current: "bg-indigo-dark",
+    upcoming: "bg-[#8F9398]",
+  };
+
+  const getStatus = useCallback(
+    (stepIndex: number): StepItemStatus => {
+      if (stepIndex < currentStep) return "complete";
+      else if (stepIndex === currentStep) return "current";
+      else return "upcoming";
+    },
+    [currentStep]
+  );
+
+  const isLastStep = useMemo(
+    () => currentStep === stepItems.length - 1,
+    [currentStep, stepItems]
+  );
+
+  const handleClickStep =
+    (step: number) => (event: React.MouseEvent<HTMLElement>) => {
+      event.preventDefault();
+
+      if (step < currentStep) {
+        setCurrentStep(step);
+      }
+    };
+
+  const handleGoBack = () => {
+    setCurrentStep(Math.max(0, currentStep - 1));
+  };
+
+  const handleContinue = () => {
+    if (isLastStep) {
+      onSubmit?.();
+      return;
+    }
+    setCurrentStep(currentStep + 1);
+  };
+
+  return (
+    <div className="flex flex-col items-center">
+      <nav className="mb-16">
+        <ol
+          className="flex flex-col items-center sm:flex-row"
+          role="list"
+        >
+          {stepItems.map((step, stepIndex) => (
+            <li
+              key={step.name}
+              className={twMerge(
+                stepIndex !== stepItems.length - 1 &&
+                  "pb-[22px] sm:pr-[22px] sm:pb-0",
+                "relative"
+              )}
+            >
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                <div className="border-0.25 h-full w-0 border border-dashed border-[#C2C6CC] sm:h-0 sm:w-full" />
+              </div>
+              <div
+                className={twMerge(
+                  "relative flex h-14 w-14 items-center justify-center rounded-full",
+                  stepIndex < currentStep && "cursor-pointer",
+                  bgColors[getStatus(stepIndex)]
+                )}
+                onClick={handleClickStep(stepIndex)}
+              >
+                {getStatus(stepIndex) === "complete" ? (
+                  <Icon
+                    className="h-6 w-6 text-white"
+                    icon="check"
+                  />
+                ) : (
+                  <span
+                    aria-hidden="true"
+                    className="text-2xl text-white"
+                  >
+                    {stepIndex + 1}
+                  </span>
+                )}
+              </div>
+              <span
+                className={`stepText absolute mt-1 hidden w-14 text-center  sm:block`}
+              >
+                {step.name}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <div className="mb-8 w-full">{arrayChildren[currentStep] ?? <></>}</div>
+      <div className="flex w-full flex-col justify-end space-y-1 sm:flex-row sm:space-x-[25px] sm:space-y-0">
+        {currentStep > 0 && <Button onClick={handleGoBack}>Go Back</Button>}
+        <Button
+          disabled={!stepItems[currentStep].canGoNext}
+          onClick={handleContinue}
+        >
+          {isLastStep ? "Submit" : "Continue"}
+        </Button>
+      </div>
+    </div>
+  );
+}
