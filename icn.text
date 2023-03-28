@@ -1,0 +1,36 @@
+import { IconProp, library } from "@fortawesome/fontawesome-svg-core";
+import { far } from "@fortawesome/free-regular-svg-icons";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { twMerge } from "tailwind-merge";
+
+library.add(far, fas);
+
+interface IconProps {
+  className?: string;
+  icon: IconProp;
+  shrinkable?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLOrSVGElement>) => void;
+}
+
+export function Icon({
+  className,
+  icon,
+  shrinkable = false,
+  onClick,
+}: IconProps) {
+  const defaultClasses = "h-4 w-4";
+  const newClasses = twMerge(
+    defaultClasses,
+    !shrinkable && "flex-shrink-0",
+    className
+  );
+
+  return (
+    <FontAwesomeIcon
+      className={newClasses}
+      icon={icon}
+      onClick={onClick}
+    />
+  );
+}
