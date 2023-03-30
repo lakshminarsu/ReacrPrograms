@@ -1,0 +1,88 @@
+import { ComponentMeta, ComponentStory } from "@storybook/react";
+
+import { Input as InputComponent } from "common";
+
+export type InputType = "email" | "password" | "text";
+interface InputProps {
+  className?: string;
+  defaultValue?: string;
+  id: string;
+  label: string;
+  labelDescription?: string;
+  placeholder?: string;
+  hasError?: boolean;
+  readonly?: boolean;
+  type?: InputType;
+}
+
+export default {
+  title: "common/Input",
+  component: InputComponent,
+} as ComponentMeta<typeof InputComponent>;
+
+const Template: ComponentStory<typeof InputComponent> = (args: InputProps) => {
+  // Below function will call when alert will dismiss
+
+  return <InputComponent {...args} />;
+};
+
+// Description
+export const TextInputField = Template.bind({});
+TextInputField.args = {
+  defaultValue: "",
+  id: "fullName",
+  label: "Full Name",
+  labelDescription: "Enter full name here",
+  placeholder: "Full Name",
+  hasError: false,
+  readonly: false,
+  type: "text",
+};
+
+export const EmailInputField = Template.bind({});
+EmailInputField.args = {
+  defaultValue: "",
+  id: "email",
+  label: "Email Address",
+  labelDescription: "Enter email here",
+  placeholder: "Email Address",
+  hasError: false,
+  readonly: false,
+  type: "email",
+};
+
+export const PasswordInputField = Template.bind({});
+PasswordInputField.args = {
+  defaultValue: "",
+  id: "password",
+  label: "Password",
+  labelDescription: "Enter password here",
+  placeholder: "Password",
+  hasError: false,
+  readonly: false,
+  type: "password",
+};
+
+export const ReadOnlyInputField = Template.bind({});
+ReadOnlyInputField.args = {
+  defaultValue: "James Anderson",
+  id: "fullName",
+  label: "Full Name",
+  labelDescription: "Enter full name here",
+  placeholder: "Full Name",
+  hasError: false,
+  readonly: true,
+  type: "text",
+};
+
+export const ErrorInputField = Template.bind({});
+ErrorInputField.args = {
+  defaultValue: "",
+  id: "fullName",
+  label: "Full Name",
+  labelDescription: "Enter full name here",
+  placeholder: "Full Name",
+  hasError: true,
+  readonly: false,
+  type: "text",
+};
