@@ -1,0 +1,116 @@
+import { ReactNode } from "react";
+import {
+  CursorArrowRaysIcon,
+  EnvelopeOpenIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
+
+import {
+  IconStats as IconStatComponent,
+  statIconItems,
+  statItems,
+  Stats as StatComponent,
+} from "common";
+
+// Simple Stat Props
+
+interface StatProps {
+  heading: ReactNode;
+  stats: statItems;
+  className?: string;
+  statHeadingClass?: string;
+  statsClass?: string;
+}
+
+// Stat Icon Props
+
+interface StatIconProps {
+  heading: ReactNode;
+  stats: statIconItems;
+  className?: string;
+}
+
+export default {
+  title: "common/Stats",
+  component: StatComponent,
+} as ComponentMeta<typeof StatComponent>;
+
+const Template: ComponentStory<typeof StatComponent> = (args: StatProps) => {
+  return <StatComponent {...args}></StatComponent>;
+};
+
+const IconStats: ComponentStory<typeof IconStatComponent> = (
+  args: StatIconProps
+) => {
+  return <IconStatComponent {...args}></IconStatComponent>;
+};
+
+// Simple Stats
+
+export const SimpleStats = Template.bind({});
+SimpleStats.args = {
+  heading: <h3 className=" sectionHeading">Last 30 days</h3>,
+  className: "",
+  statHeadingClass: "",
+  statsClass: "",
+  stats: [
+    { name: "Total Subscribers", stat: "71,897" },
+    { name: "Avg. Open Rate", stat: "58.16%" },
+    { name: "Avg. Click Rate", stat: "24.57%" },
+  ],
+};
+
+//  Stats With Icons
+
+export const StatsWithIcons = IconStats.bind({});
+StatsWithIcons.args = {
+  heading: <h3 className="sectionHeading">Last 30 days</h3>,
+  className: "bg-red-200",
+  statHeadingClass: "",
+  statsClass: "",
+  stats: [
+    {
+      id: "1",
+      name: "Total Subscribers",
+      stat: "71,897",
+      icon: (
+        <UsersIcon
+          aria-hidden="true"
+          className="h-6 w-6 text-white"
+        />
+      ),
+      change: "122",
+      changeType: "increase",
+      viewAll: true,
+    },
+    {
+      id: "2",
+      name: "Avg. Open Rate",
+      stat: "58.16%",
+      icon: (
+        <EnvelopeOpenIcon
+          aria-hidden="true"
+          className="h-6 w-6 text-white"
+        />
+      ),
+      change: "5.4%",
+      changeType: "increase",
+    },
+    {
+      id: "3",
+      name: "Avg. Click Rate",
+      stat: "24.57%",
+      icon: (
+        <CursorArrowRaysIcon
+          aria-hidden="true"
+          className="h-6 w-6 text-white"
+        />
+      ),
+      change: "3.2%",
+      changeType: "decrease",
+      viewAll: true,
+      url: "#",
+    },
+  ],
+};
