@@ -1,0 +1,170 @@
+import { ReactNode, useState } from "react";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
+import clsx from "clsx";
+
+import { Input, RadioGroup, Stepper as StepperComponent } from "common";
+
+export type StepItem = {
+  name: string;
+  canGoNext?: boolean;
+};
+
+export type StepItems = StepItem[];
+
+interface StepperArgs {
+  children: ReactNode;
+  stepItems: StepItems;
+  onSubmit?: () => void;
+}
+
+export default {
+  title: "common/Stepper",
+  component: StepperComponent,
+} as ComponentMeta<typeof StepperComponent>;
+
+const Template: ComponentStory<typeof StepperComponent> = (
+  args: StepperArgs
+) => {
+  return (
+    <StepperComponent {...args}>
+      <h2 className="text-center">First Brand Step</h2>
+      <h4 className="text-center">Second Attributte Step</h4>
+      <h4 className="text-center">Third LOA Step</h4>
+      <h4 className="text-center">Fourth Numbers Step</h4>
+      <h4 className="text-center">Fifth Review Step</h4>
+    </StepperComponent>
+  );
+};
+
+const radioGroupItems = [
+  { key: "male", name: "Male" },
+  { key: "female", name: "Feale" },
+  { key: "others", name: "Others" },
+];
+
+const WithForm: ComponentStory<typeof StepperComponent> = (
+  args: StepperArgs
+) => {
+  const [selectedGender, setSelectedGender] = useState("male");
+
+  const changeSelected = (value: any): void => {
+    setSelectedGender(value);
+  };
+  return (
+    <StepperComponent {...args}>
+      <div>
+        <label
+          className={clsx("block text-[16px] font-bold tracking-[0.12px]")}
+          htmlFor={"name"}
+        >
+          First Name
+          <small className="ml-1">Enter first name here:</small>
+        </label>
+        <Input
+          className="col-span-1 sm:col-span-1"
+          defaultValue=""
+          id="firstName"
+          label="First Name"
+          type="text"
+        />
+      </div>
+      <div>
+        <label
+          className={clsx("block text-[16px] font-bold tracking-[0.12px]")}
+          htmlFor={"name"}
+        >
+          Last Name
+          <small className="ml-1">Enter last name here:</small>
+        </label>
+        <Input
+          className="col-span-1 sm:col-span-1"
+          defaultValue=""
+          id="lastName"
+          label="Last Name"
+          type="text"
+        />
+      </div>
+      <div>
+        <label
+          className={clsx("block text-[16px] font-bold tracking-[0.12px]")}
+          htmlFor={"name"}
+        >
+          Email
+          <small className="ml-1">Enter email here:</small>
+        </label>
+        <Input
+          className="col-span-1 sm:col-span-1"
+          defaultValue=""
+          id="email"
+          label="Email"
+        />
+      </div>
+      <div>
+        <RadioGroup
+          changeSelected={changeSelected}
+          label="Gender"
+          radioGroupItems={radioGroupItems}
+          selected={selectedGender}
+        />
+      </div>
+      <div>
+        <label
+          className={clsx("block text-[16px] font-bold tracking-[0.12px]")}
+          htmlFor={"name"}
+        >
+          Password
+          <small className="ml-1">Enter password here:</small>
+        </label>
+        <Input
+          className="col-span-1 sm:col-span-1"
+          defaultValue=""
+          id="password"
+          label="Password"
+          type="password"
+        />
+      </div>
+    </StepperComponent>
+  );
+};
+
+// Simple Stepper
+
+export const SimpleStepper = Template.bind({});
+SimpleStepper.args = {
+  stepItems: [
+    { name: "Brand", canGoNext: true },
+    { name: "Attribute", canGoNext: true },
+    { name: "LOA", canGoNext: true },
+    { name: "Numbers", canGoNext: true },
+    { name: "Review", canGoNext: true },
+  ],
+  onSubmit: () => alert("Submit"),
+};
+
+//  Stepper With Form
+
+export const StepperWithForm = WithForm.bind({});
+StepperWithForm.args = {
+  stepItems: [
+    { name: "First Name", canGoNext: true },
+    { name: "Last Name", canGoNext: true },
+    { name: "Email", canGoNext: true },
+    { name: "Gender", canGoNext: true },
+    { name: "Password", canGoNext: true },
+  ],
+  onSubmit: () => alert("Submit"),
+};
+
+//  Stepper WithOut Next
+
+export const StepperWithDisabledNext = Template.bind({});
+StepperWithDisabledNext.args = {
+  stepItems: [
+    { name: "First Name", canGoNext: false },
+    { name: "Last Name", canGoNext: false },
+    { name: "Email", canGoNext: false },
+    { name: "Gender", canGoNext: false },
+    { name: "Password", canGoNext: false },
+  ],
+  onSubmit: () => alert("Submit"),
+};
