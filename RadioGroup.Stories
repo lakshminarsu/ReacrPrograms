@@ -1,0 +1,61 @@
+import { useArgs } from "@storybook/client-api";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
+
+import { RadioGroup as RadioGroupComponent, RadioGroupItems } from "common";
+
+interface RadioGroupArgs {
+  label?: string;
+  labelClass?: string;
+  optionsClass?: string;
+  radioGroupItems: RadioGroupItems;
+  selected?: React.Key;
+  changeSelected?: (key: React.Key) => void;
+}
+
+export default {
+  title: "common/Radio",
+  component: RadioGroupComponent,
+} as ComponentMeta<typeof RadioGroupComponent>;
+
+const Template: ComponentStory<typeof RadioGroupComponent> = (
+  args: RadioGroupArgs
+) => {
+  const [, updateArgs] = useArgs();
+
+  const changeSelected = (value: any): void => {
+    updateArgs({ selected: value });
+  };
+
+  return (
+    <RadioGroupComponent
+      {...args}
+      changeSelected={changeSelected}
+    />
+  );
+};
+
+const radioGroupItems = [
+  { key: "male", name: "Male" },
+  { key: "female", name: "Feale" },
+  { key: "others", name: "Others" },
+];
+
+// Radio Group Witht Value
+
+export const RadioGroupWithSelectedValue = Template.bind({});
+RadioGroupWithSelectedValue.args = {
+  labelClass: "",
+  label: "Gender",
+  radioGroupItems: radioGroupItems,
+  selected: "male",
+};
+
+// Radio Group Witht Value
+export const RadioGroupWithOutSelectedValue = Template.bind({});
+RadioGroupWithOutSelectedValue.args = {
+  labelClass: "",
+  optionsClass: "",
+  label: "Gender",
+  radioGroupItems: radioGroupItems,
+  selected: "",
+};
