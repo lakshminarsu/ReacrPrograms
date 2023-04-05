@@ -1,0 +1,67 @@
+import { useState } from "react";
+import { Switch } from "@headlessui/react";
+
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(" ");
+}
+
+// Prop types of component
+
+interface ToggleLabelDescriptionProps {
+  changeSelected: () => void;
+  label: string;
+  description: string;
+}
+
+export function ToggleWithLabelDescription({
+  changeSelected,
+  label,
+  description,
+}: ToggleLabelDescriptionProps) {
+  const [enabled, setEnabled] = useState(false);
+
+  // Below function will call when toggle value change
+  const handleChange = (value: boolean) => {
+    setEnabled(value);
+    changeSelected();
+  };
+
+  return (
+    <Switch.Group
+      as="div"
+      className="flex items-center justify-between"
+    >
+      <span className="flex flex-grow flex-col">
+        <Switch.Label
+          as="span"
+          className="sectionHeading text-sm"
+          passive
+        >
+          {label}
+        </Switch.Label>
+        <Switch.Description
+          as="span"
+          className="bodyText text-sm"
+        >
+          {description}
+        </Switch.Description>
+      </span>
+      <Switch
+        checked={enabled}
+        className={classNames(
+          enabled ? "bg-indigo-600" : "bg-gray-200",
+          "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        )}
+        onChange={handleChange}
+      >
+        <span
+          aria-hidden="true"
+          className={classNames(
+            enabled ? "translate-x-5" : "translate-x-0",
+            "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+          )}
+        />
+      </Switch>
+    </Switch.Group>
+  );
+}
