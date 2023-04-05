@@ -3,7 +3,6 @@ import { Stepper } from './Stepper';
 import { Input } from './Input';
 import { RadioGroup } from './Radio';
 import clsx from "clsx";
-import { useState } from 'react';
 
 
 const simpleRenderComponent = () => {
@@ -29,10 +28,6 @@ const simpleRenderComponent = () => {
 };
 
 const formRenderComponent = () => {
-    const [selectedGender, setSelectedGender] = useState("male");
-    const changeSelected = (value: any): void => {
-      setSelectedGender(value);
-    };
     const radioGroupItems = [
         { key: "male", name: "Male" },
         { key: "female", name: "Feale" },
@@ -99,11 +94,9 @@ const formRenderComponent = () => {
           />
         </div>
         <div>
-          <RadioGroup
-            changeSelected={changeSelected}
+          <RadioGroup    
             label="Gender"
             radioGroupItems={radioGroupItems}
-            selected={selectedGender}
           />
         </div>
         <div>
@@ -126,7 +119,7 @@ const formRenderComponent = () => {
     );
 };
 
-describe('<Stepper />', ()=>{
+describe('simple <Stepper />', ()=>{
     it('renders without crashing', ()=>{
         const view = simpleRenderComponent();
         expect(view).toMatchSnapshot();
@@ -212,4 +205,29 @@ describe('<Stepper />', ()=>{
         expect(linkElement).toBeInTheDocument();
     });
 
+    it('form renders without crashing', ()=>{
+        const view = formRenderComponent();
+        expect(view).toMatchSnapshot();
+    });
+
+    it('validate form elements in stepper', ()=>{
+        const view = formRenderComponent();
+        let linkElement = screen.getByText('Enter first name here:');
+        expect(linkElement).toBeInTheDocument();
+
+        const buttonElement = (screen.getByRole("button") as HTMLElement);
+        expect(buttonElement.innerHTML).toBe("Continue");
+
+        fireEvent.click(buttonElement);
+
+        linkElement = screen.getByText('Enter last name here:');
+        expect(linkElement).toBeInTheDocument();
+
+        fireEvent.click(buttonElement);
+
+        linkElement = screen.getByText('Enter email here:');
+        expect(linkElement).toBeInTheDocument();
+
+        fireEvent.click(buttonElement);
+    });
 })
